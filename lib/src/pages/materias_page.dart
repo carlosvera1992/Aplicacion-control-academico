@@ -1,3 +1,7 @@
+
+import 'package:controlacademico/src/models/materia_model2.dart';
+import 'package:controlacademico/src/providers/materias_provides.dart';
+import 'package:controlacademico/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 
 class MateriasPage extends StatefulWidget {
@@ -10,32 +14,43 @@ class MateriasPage extends StatefulWidget {
 class _MateriasPageState extends State<MateriasPage> {
   final _divider = SizedBox(height: 34.0);
 
+  final _formKey = GlobalKey<FormState>();
+
+  final materiasProvides = new MateriasProvider();
+
+  MateriaModel materia = new MateriaModel();
+
   double _currentSliderValue = 1.0;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-      scrollDirection: Axis.vertical,
-      children: [
-        _fieldCode(),
-        _divider,
-        _fieldName(),
-        _divider,
-        _fieldObjetive(),
-        _divider,
-        _fielMinCalification(),
-        _divider,
-        Text('Distribución'),
-        _fieldDistribution(),
-        _divider,
-        _buttons(),
-      ],
+    return SingleChildScrollView(
+      child: Container(
+         padding: EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _fieldCode(),
+              _divider,
+              _fieldName(),
+              _divider,
+              _fieldObjetive(),
+              _divider,
+              _fielMinCalification(),
+              _divider,
+              _buttons(),
+              SizedBox(height: 25.0)
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget _fieldCode() {
     return TextFormField(
+      initialValue:materia.codigo,//mapeo con el modelo
       textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
         border: OutlineInputBorder(),
@@ -44,13 +59,20 @@ class _MateriasPageState extends State<MateriasPage> {
         hintText: 'Código de la materia',
         labelText: 'Código',
       ),
-      onChanged: (String value) {},
+      onSaved: (value) => materia.codigo = value,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Debe llenar este campo';
+        }
+        return null;
+      },
     );
   }
 
   Widget _fieldName() {
     return TextFormField(
-      textCapitalization: TextCapitalization.words,
+      initialValue:materia.nombre,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         filled: true,
@@ -58,12 +80,19 @@ class _MateriasPageState extends State<MateriasPage> {
         hintText: 'Nombre',
         labelText: 'Nombre de la materia',
       ),
-      onChanged: (String value) {},
+      onSaved: (value) => materia.nombre = value,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Debe llenar este campo';
+        }
+        return null;
+      },
     );
   }
 
   Widget _fieldObjetive() {
     return TextFormField(
+      initialValue:materia.meta.toString(),
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
           border: OutlineInputBorder(),
@@ -73,13 +102,23 @@ class _MateriasPageState extends State<MateriasPage> {
           suffixText: '3.0',
           icon: Icon(Icons.done),
           hintText: 'Meta',
-          suffixStyle: TextStyle(color: Colors.green)),
-      onChanged: (String value) {},
+          suffixStyle: TextStyle(color: Colors.green)
+      ),
+      onSaved: (value) => materia.meta = double.parse(value),
+      validator: (value) {
+
+        if( utils.isNumeric(value)){
+          return null;
+        }else { 
+          return 'Sólo Números';
+        }
+      },
     );
   }
 
   Widget _fielMinCalification() {
     return TextFormField(
+      initialValue:materia.notaMin.toString(),
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
           border: OutlineInputBorder(),
@@ -89,9 +128,16 @@ class _MateriasPageState extends State<MateriasPage> {
           suffixText: '3.0',
           icon: Icon(Icons.minimize),
           hintText: 'Nota Minima',
-          suffixStyle: TextStyle(color: Colors.green)),
-      onChanged: (String value) {
-        print(value);
+          suffixStyle: TextStyle(color: Colors.green)
+      ),
+      onSaved: (value) => materia.notaMin = double.parse(value),
+      validator: (value) {
+         if( utils.isNumeric(value)){
+          return null;
+        }else { 
+          return 'Sólo Números';
+        }
+
       },
     );
   }
@@ -117,31 +163,44 @@ class _MateriasPageState extends State<MateriasPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        RaisedButton(
-          color: Colors.indigoAccent,
-            child: Row(
-              children: [
-                Text('Cancelar',
-                 style: TextStyle(color: Colors.white, fontSize: 20.0)),
-                 Icon(Icons.cancel, color: Colors.white,)
-              ],
-            ),
-           onPressed: () {
-            Navigator.pushReplacementNamed(context, 'notas');
+        RaisedButton.icon(
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0)
+          ),
+          color: Colors.deepPurple,
+          textColor: Colors.white,
+          label: Text('Guardar', style: TextStyle(fontSize: 20.0),),
+          icon: Icon(Icons.save, size: 25.0,),
+          onPressed: (){
+            _submit();
           },
         ),
-        RaisedButton(
-          color: Colors.indigo,
-          onPressed: () {},
-          child: Row(
-            children: [
-              Text( 'Guardar', style: TextStyle(color: Colors.white, fontSize: 20.0 )),
-              Icon(Icons.save, color: Colors.white,)
-            ],
-          ),
-        ),
       ],
-    
     );
+  }
+
+  void _submit(){
+
+    if (!_formKey.currentState.validate()) return;
+    
+    _formKey.currentState.save();
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Guardando Materia'),
+          backgroundColor: Colors.deepPurple,
+        )
+      );
+
+      print(materia.codigo );
+      print(materia.nombre );
+      print(materia.meta );
+      print(materia.notaMin);
+
+
+    materiasProvides.insertarMateria(materia);
+
+    
   }
 }

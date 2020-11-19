@@ -12,8 +12,8 @@ class HomePage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text('Control Académico',
-                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-            backgroundColor: Colors.indigo,
+                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)
+            ),
             bottom: TabBar(
               tabs: _generarTabsBar(),
             ),
@@ -33,11 +33,6 @@ class HomePage extends StatelessWidget {
         )
       );
   }
-
-
-
-
-
 
 
 
