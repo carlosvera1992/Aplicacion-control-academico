@@ -1,6 +1,8 @@
 import 'package:controlacademico/src/models/materia_model2.dart';
 import 'package:flutter/material.dart';
 
+import '../models/materia_model2.dart';
+
 
 
 class MateriaDetallePage extends StatelessWidget {
@@ -19,19 +21,39 @@ class MateriaDetallePage extends StatelessWidget {
           centerTitle: true,
         ),
         
-        body: ListView.builder(
-          itemCount: materia.notas.length,
-          
-          itemBuilder: (BuildContext context, int index) {
+        body: _mostrarNotas(materia)
+      )
+    );
+    
+  }
+  Widget _mostrarNotas(MateriaModel materia){
 
+    if( materia.notas.isEmpty ){
+      return Center(
+        child: Container(
+          height: 300,
+          width: 300.0,
+          decoration: BoxDecoration(
+            color: Colors.deepPurple
+          ),
+          child: Center(
+            child: Text('Asignatura sin calificaciones',
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),),
+          ),
+        ),
+      );
+    }else{
+      return ListView.builder(
+          itemCount: materia.notas.length,
+          itemBuilder: (BuildContext context, int index) {
           return ListTile(
             title: Text(materia.notas[index].porcentaje.toString()),
             subtitle: Text(materia.notas[index].calificacion.toString()),
           );
 
          },
-        ),
-      )
-    );
+        );
+    }
   }
+  
 }

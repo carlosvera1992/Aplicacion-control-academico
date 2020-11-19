@@ -199,8 +199,23 @@ class _MateriasPageState extends State<MateriasPage> {
       print(materia.notaMin);
 
 
-    materiasProvides.insertarMateria(materia);
+    bool resp = materiasProvides.insertarMateria(materia);
 
-    
+    if(resp){
+        print(resp);
+        Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Materia agregada correctamente'),
+          backgroundColor: Colors.teal,
+        )
+      );
+    }else{
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ha ocurrido un error'),
+          backgroundColor: Colors.red[700],
+        )
+      );
   }
+}
 }
