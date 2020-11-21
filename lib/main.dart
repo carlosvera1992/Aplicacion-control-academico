@@ -20,9 +20,9 @@ class MyApp extends StatelessWidget {
       title: 'Control Academico',
       initialRoute: 'home',
       routes: {
-        'notas'   : (BuildContext context ) => NotasPage(),
-        'home'    : (BuildContext context ) => HomePage(),
-        'materia' : (BuildContext context ) => MateriasPage(),
+        'notas'    : (BuildContext context ) => NotasPage(),
+        'home'     : (BuildContext context ) => HomePage(),
+        'materia'  : (BuildContext context ) => MateriasPage(),
         'detalles' : (BuildContext context ) => MateriaDetallePage(),
       },
     );

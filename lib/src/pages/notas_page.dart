@@ -26,16 +26,36 @@ class _NotasPageState extends State<NotasPage> {
     return ListView.builder(
       itemCount: materias.length,
       itemBuilder: (BuildContext context, int index){
-        return ListTile(
-          leading: Icon(Icons.book),
-          title: Text(materias[index].codigo),
-          subtitle: Text(materias[index].nombre),
-          trailing: Icon(Icons.keyboard_arrow_right),
-          onTap: (){
-            Navigator.pushNamed(context, 'detalles', arguments: materias[index]);
-          },
+        return Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.menu_book, color: Colors.deepPurple),
+              title: Text(materias[index].codigo,
+                style: TextStyle(fontSize: 20.0),
+              ),
+              subtitle: Text(materias[index].nombre,
+                style: TextStyle(fontSize: 18.0)
+              ),
+              trailing: Icon(Icons.keyboard_arrow_right,),
+              onTap: (){
+                Navigator.pushNamed(context, 'detalles', arguments: materias[index]);
+              },
+            ),
+            _calcularNota(materias[index]),
+             Divider(height: 10.0, color: Colors.black,),
+          ],
         );
       } 
+    );
+    
+  }
+   Widget _calcularNota( MateriaModel materia){
+    double notaF = 0.0;
+    materia.notas.forEach((nota) {
+      notaF += (nota.calificacion * nota.porcentaje)/100;
+    });
+    return Container(
+      child: Text('Nota Parcial $notaF', style: TextStyle(fontWeight: FontWeight.bold),),
     );
     
   }

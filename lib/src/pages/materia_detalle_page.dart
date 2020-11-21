@@ -21,9 +21,10 @@ class MateriaDetallePage extends StatelessWidget {
           centerTitle: true,
         ),
         
-        body: _mostrarNotas(materia)
+        body: _mostrarNotas(materia),
       )
     );
+    
     
   }
   Widget _mostrarNotas(MateriaModel materia){
@@ -46,14 +47,28 @@ class MateriaDetallePage extends StatelessWidget {
       return ListView.builder(
           itemCount: materia.notas.length,
           itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(materia.notas[index].porcentaje.toString()),
-            subtitle: Text(materia.notas[index].calificacion.toString()),
-          );
+          return Column(
+            children: [
+              ListTile(
+                title: Text('${materia.notas[index].porcentaje.toString()}%',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+                subtitle: Text(materia.notas[index].calificacion.toString(),
+                  style: TextStyle(fontSize: 18.0)
+                ),
+              ),
+              Divider(height: 10.0, color: Colors.black,),
 
+            ],
+          );
+           
          },
-        );
+         
+      );
     }
   }
   
+  
+  
+ 
 }
